@@ -27,9 +27,9 @@ def main():
     for log_name in log_names:
         log, model, initial_marking, final_marking = load_inputs(log_name, modelpath="models")
 
-        eval_partitions(log, log_name)
+        #eval_partitions(log, log_name)
         eval_quality(log, log_name, model, initial_marking, final_marking)
-        eval_runtime(log, log_name, model, initial_marking, final_marking)
+        #eval_runtime(log, log_name, model, initial_marking, final_marking)
 
 
 def eval_partitions(log, log_name):
@@ -98,15 +98,15 @@ def eval_quality(log, log_name, model, initial_marking, final_marking):
         "approach;sample_size;repetition;trace_variants;deviating_traces;total_deviations;num_deviating_activities"
         ";fitness;time_partitioning;time_sampling;time_alignments\n")
 
-    knowledge_base_results = open(os.path.join("results", "knowledge_base_convergence_" + log_name + ".csv"), "w")
-    knowledge_base_results.write(
-        "approach;sample_size;repetition;dist_to_baseline;first_positive_at;trace_idx;cor_change\n")
-
-    correlation_results = open(os.path.join("results", "knowledge_base_correlations_" + log_name + ".csv"), "w")
-    correlation_results.write("approach;sample_size;repetition;feature;informative;correlation\n")
-
-    activity_results = open(os.path.join("results", "activities_" + log_name + ".csv"), "w")
-    activity_results.write("approach;sample_size;avg_dev_activities;stddev;avg_pw_similarity;stddev\n")
+    # knowledge_base_results = open(os.path.join("results", "knowledge_base_convergence_" + log_name + ".csv"), "w")
+    # knowledge_base_results.write(
+    #     "approach;sample_size;repetition;dist_to_baseline;first_positive_at;trace_idx;cor_change\n")
+    #
+    # correlation_results = open(os.path.join("results", "knowledge_base_correlations_" + log_name + ".csv"), "w")
+    # correlation_results.write("approach;sample_size;repetition;feature;informative;correlation\n")
+    #
+    # activity_results = open(os.path.join("results", "activities_" + log_name + ".csv"), "w")
+    # activity_results.write("approach;sample_size;avg_dev_activities;stddev;avg_pw_similarity;stddev\n")
 
     for approach in approaches:
         for sample_size in samples_sizes:
@@ -158,63 +158,63 @@ def eval_quality(log, log_name, model, initial_marking, final_marking):
                               str(sample.times["alignment"]) + "\n")))
 
                 # next, get dist of knowledge base to ground truth
-                if approach != "Random" and approach != "Longest":
-                    sample_knowledge_base = sample.correlations
-                    ground_truth_correlations = None
-                    if approach == "Feature":
-                        ground_truth_correlations = pickle.load(
-                            open(os.path.join("knowledge_base_cache", log_name + "_feature.knowledge_base"), "rb"))
-
-                    if approach == "Sequence":
-                        ground_truth_correlations = pickle.load(
-                            open(os.path.join("knowledge_base_cache", log_name + "_sequence.knowledge_base"), "rb"))
-
-                    a = np.array([x.correlation for x in ground_truth_correlations.values()])
-                    b = np.array([x.correlation for x in sample_knowledge_base.values()])
-                    dist = numpy.linalg.norm(a - b)
-
-                    for idx, change in enumerate(sample.correlation_changes):
-                        knowledge_base_results.write(";".join((str(approach), str(sample_size), str(i),
-                                                               str(dist),
-                                                               str(sample.first_positive_correlation_at), str(idx),
-                                                               str(change) + "\n")))
-
-                correlations = {}
-                for correlation in sample.correlations.keys():
-                    correlations[correlation] = float(sample.correlations[correlation].correlation)
-                sorted_correlations = sorted(correlations.items(), key=lambda item: item[1])
-                sorted_correlations.reverse()
-                sorted_names = [x[0] for x in sorted_correlations]
-                for name in sorted_names:
-                    if correlations[name] > 0:
-                        correlation_results.write(
-                            ";".join((str(approach), str(sample_size), str(i), str(name), str(True),
-                                      str(correlations[name]) + "\n")))
-                    else:
-                        correlation_results.write(
-                            ";".join((str(approach), str(sample_size), str(i), str(name), str(False),
-                                      str(correlations[name]) + "\n")))
-
-
-            # Compute deviating activity stats
-            pw_similarities = []
-            activity_sizes = list(map(lambda s: len(s), deviating_activities))
-            for x, y in combinations(deviating_activities, 2):
-                pw_similarities.append(jaccard_sim(x, y))
-            activity_results.write(
-                ";".join((str(approach),
-                          str(sample_size),
-                          str(mean(activity_sizes)),
-                          str(std(activity_sizes)),
-                          str(mean(pw_similarities)),
-                          str(std(pw_similarities)))
-                         ) + "\n")
+            #     if approach != "Random" and approach != "Longest":
+            #         sample_knowledge_base = sample.correlations
+            #         ground_truth_correlations = None
+            #         if approach == "Feature":
+            #             ground_truth_correlations = pickle.load(
+            #                 open(os.path.join("knowledge_base_cache", log_name + "_feature.knowledge_base"), "rb"))
+            #
+            #         if approach == "Sequence":
+            #             ground_truth_correlations = pickle.load(
+            #                 open(os.path.join("knowledge_base_cache", log_name + "_sequence.knowledge_base"), "rb"))
+            #
+            #         a = np.array([x.correlation for x in ground_truth_correlations.values()])
+            #         b = np.array([x.correlation for x in sample_knowledge_base.values()])
+            #         dist = numpy.linalg.norm(a - b)
+            #
+            #         for idx, change in enumerate(sample.correlation_changes):
+            #             knowledge_base_results.write(";".join((str(approach), str(sample_size), str(i),
+            #                                                    str(dist),
+            #                                                    str(sample.first_positive_correlation_at), str(idx),
+            #                                                    str(change) + "\n")))
+            #
+            #     correlations = {}
+            #     for correlation in sample.correlations.keys():
+            #         correlations[correlation] = float(sample.correlations[correlation].correlation)
+            #     sorted_correlations = sorted(correlations.items(), key=lambda item: item[1])
+            #     sorted_correlations.reverse()
+            #     sorted_names = [x[0] for x in sorted_correlations]
+            #     for name in sorted_names:
+            #         if correlations[name] > 0:
+            #             correlation_results.write(
+            #                 ";".join((str(approach), str(sample_size), str(i), str(name), str(True),
+            #                           str(correlations[name]) + "\n")))
+            #         else:
+            #             correlation_results.write(
+            #                 ";".join((str(approach), str(sample_size), str(i), str(name), str(False),
+            #                           str(correlations[name]) + "\n")))
+            #
+            #
+            # # Compute deviating activity stats
+            # pw_similarities = []
+            # activity_sizes = list(map(lambda s: len(s), deviating_activities))
+            # for x, y in combinations(deviating_activities, 2):
+            #     pw_similarities.append(jaccard_sim(x, y))
+            # activity_results.write(
+            #     ";".join((str(approach),
+            #               str(sample_size),
+            #               str(mean(activity_sizes)),
+            #               str(std(activity_sizes)),
+            #               str(mean(pw_similarities)),
+            #               str(std(pw_similarities)))
+            #              ) + "\n")
 
     fitness_results.close()
-    knowledge_base_results.close()
-    correlation_results.close()
-    # deviation_dist.close()
-    activity_results.close()
+    # knowledge_base_results.close()
+    # correlation_results.close()
+    # # deviation_dist.close()
+    # activity_results.close()
 
 
 def jaccard_sim(s, t):
