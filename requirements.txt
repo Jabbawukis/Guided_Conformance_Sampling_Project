@@ -1,0 +1,8 @@
+pm4py
+tqdm
+matplotlib
+numpy
+pandas
+seaborn
+lxml
+scipy
