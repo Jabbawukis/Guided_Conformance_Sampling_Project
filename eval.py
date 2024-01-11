@@ -20,7 +20,7 @@ log_names = ["Sepsis_Cases_-_Event_Log.xes", "BPI_Challenge_2012.xes", "BPI_Chal
 approaches = ["Random", "Longest", "Feature", "Sequence"]
 samples_sizes = [100, 200, 300, 400, 500]
 repetitions = 10
-cached_alignments = True
+cached_alignments = False
 
 
 def main():
@@ -245,7 +245,7 @@ def eval_runtime(log, log_name, model, initial_marking, final_marking, timeout=1
                 sample_size) + " : " + str(i))
 
             if not timeout_reached:
-                sample_t = RandomLogSampler(use_cache=True, alignment_cache={}) \
+                sample_t = RandomLogSampler(use_cache=True) \
                     .construct_sample(log, model, initial_marking, final_marking, sample_size)
 
                 print(" > " + str(str(sample_t.times["alignment"])))
