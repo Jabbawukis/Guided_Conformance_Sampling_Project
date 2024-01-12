@@ -117,23 +117,23 @@ def eval_quality(log, log_name, model, initial_marking, final_marking):
 
                 sample = None
                 if approach == "Random":
-                    sampler = RandomLogSampler(use_cache=True)
+                    sampler = RandomLogSampler(use_cache=False)
                     sampler.alignment_cache = alignment_cache
                     sample = sampler.construct_sample(log, model, initial_marking, final_marking, sample_size)
 
                 if approach == "Longest":
-                    sampler = LongestTraceVariantLogSampler(use_cache=True)
+                    sampler = LongestTraceVariantLogSampler(use_cache=False)
                     sampler.alignment_cache = alignment_cache
                     sample = sampler.construct_sample(log, model, initial_marking, final_marking, sample_size)
 
                 if approach == "Feature":
-                    sampler = FeatureGuidedLogSampler(log, use_cache=True,
+                    sampler = FeatureGuidedLogSampler(log, use_cache=False,
                                                       index_file="index_files/" + log_name + ".index")
                     sampler.alignment_cache = alignment_cache
                     sample = sampler.construct_sample(log, model, initial_marking, final_marking, sample_size)
 
                 if approach == "Sequence":
-                    sampler = SequenceGuidedLogSampler(log, batch_size=1, use_cache=True,
+                    sampler = SequenceGuidedLogSampler(log, batch_size=1, use_cache=False,
                                                        index_file="index_files/" + log_name + ".index")
                     sampler.alignment_cache = alignment_cache
                     sample = sampler.construct_sample(log, model, initial_marking, final_marking, sample_size)
