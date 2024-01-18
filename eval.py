@@ -95,8 +95,8 @@ def eval_quality(log, log_name, model, initial_marking, final_marking):
 
     fitness_results = open(os.path.join("results", "fitness_" + log_name + ".csv"), "w")
     fitness_results.write(
-        "approach;sample_size;repetition;trace_variants;deviating_traces;total_deviations;num_deviating_activities"
-        ";fitness;time_partitioning;time_sampling;time_alignments\n")
+        "approach,sample_size,repetition,trace_variants,deviating_traces,total_deviations,num_deviating_activities"
+        ",fitness,time_partitioning,time_sampling,time_alignments\n")
 
     # knowledge_base_results = open(os.path.join("results", "knowledge_base_convergence_" + log_name + ".csv"), "w")
     # knowledge_base_results.write(
@@ -151,7 +151,7 @@ def eval_quality(log, log_name, model, initial_marking, final_marking):
                 print(" > " + str(sample.times["partitioning"]) + ", " + str(sample.times["alignment"]) + ", "
                       + str(sample.times["sampling"]))
                 fitness_results.write(
-                    ";".join((str(approach), str(sample_size), str(i), str(len(trace_variants)),
+                    ",".join((str(approach), str(sample_size), str(i), str(len(trace_variants)),
                               str(sample.trace_deviations), str(sample.total_deviations),
                               str(len(sample.activity_deviations.keys())), str(sample.fitness),
                               str(sample.times["partitioning"]), str(sample.times["sampling"]),
